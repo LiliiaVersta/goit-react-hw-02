@@ -8,14 +8,15 @@ export const App = () => {
   const [feedback, setFeedback] = useState({ good: 0, neutral: 0, bad: 0 });
   let totalFeedback = feedback.good + feedback.neutral + feedback.bad;
   let positive = Math.round((feedback.good / totalFeedback) * 100);
-
-  const updateFeedback = (feedbackType) => {
-    const state = { ...feedback, [feedbackType]: feedback[feedbackType] + 1 }
-  
-    setFeedback(state)
-    localStorage.setItem('feedbacks', JSON.stringify(state))
+ const updateFeedback = (feedbackType) => {
+    setFeedback((f) => {
+      return { ...f, [feedbackType]: f[feedbackType] + 1 };
+    });
   };
 
+useEffect(() => {
+localStorage.setItem('feedbacks', JSON.stringify(feedback))
+  }, [feedback]);
   useEffect(() => {
     let localState = JSON.parse(localStorage.getItem("feedbacks"));
     let computedState = localState || { good: 0, neutral: 0, bad: 0 };
